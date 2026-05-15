@@ -23,8 +23,9 @@ namespace CSharp_68PM1_LePhuongNam_0019168
 
             if (username == emailSinhVien && password == mssv)
             {
-                MessageBox.Show("Đăng nhập thành công!", "Thông báo",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MainForm mainForm = new MainForm();
+                mainForm.Show();
+                this.Hide(); // Ẩn form đăng nhập
             }
             else
             {
