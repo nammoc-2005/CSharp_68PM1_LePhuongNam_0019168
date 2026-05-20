@@ -9,28 +9,22 @@
 
         private void mnuSinhVien_Click(object sender, EventArgs e)
         {
-            ShowForm(new FormSinhVien());
+            pnlMain.Controls.Clear();
+            var uc = new UCQLSinhVien { Dock = DockStyle.Fill };
+            pnlMain.Controls.Add(uc);
         }
 
         private void mnuLopHoc_Click(object sender, EventArgs e)
         {
-            ShowForm(new FormLopHoc());
+            pnlMain.Controls.Clear();
+            var uc = new UCQLLH { Dock = DockStyle.Fill };
+            pnlMain.Controls.Add(uc);
         }
 
         private void mnuDangXuat_Click(object sender, EventArgs e)
         {
             this.Hide();
             new Form1().Show();
-        }
-
-        private void ShowForm(Form form)
-        {
-            form.TopLevel = false;
-            form.FormBorderStyle = FormBorderStyle.None;
-            form.Dock = DockStyle.Fill;
-            pnlMain.Controls.Clear();
-            pnlMain.Controls.Add(form);
-            form.Show();
         }
     }
 }
