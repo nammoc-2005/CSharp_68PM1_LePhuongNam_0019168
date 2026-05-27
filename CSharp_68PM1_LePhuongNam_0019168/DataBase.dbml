@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="qlsv" Class="DataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=MOOCS\NAMSQL;Initial Catalog=qlsv;User ID=nam;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True" SettingsObjectName="CSharp_68PM1_LePhuongNam_0019168.Properties.Settings" SettingsPropertyName="qlsvConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.tbl_lophoc" Member="tbl_lophocs">
+    <Type Name="tbl_lophoc">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="malop" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="tenlop" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="ghichu" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Association Name="tbl_lophoc_tbl_sinhvien" Member="tbl_sinhviens" ThisKey="malop" OtherKey="malop" Type="tbl_sinhvien" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tbl_sinhviens" Member="tbl_sinhviens">
+    <Type Name="tbl_sinhvien">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="hoten" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="gioitinh" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="ngaysinh" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="malop" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Association Name="tbl_lophoc_tbl_sinhvien" Member="tbl_lophoc" ThisKey="malop" OtherKey="malop" Type="tbl_lophoc" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>

@@ -1,12 +1,20 @@
-﻿using System;
-using System.Windows.Forms;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.Linq;
 
 namespace CSharp_68PM1_LePhuongNam_0019168
 {
-    partial class FormSinhVien
+    partial class UCQuanLySinhVien
     {
         private System.ComponentModel.IContainer components = null;
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && components != null) components.Dispose();
@@ -32,9 +40,8 @@ namespace CSharp_68PM1_LePhuongNam_0019168
                 AutoSize = true
             };
 
-            // Mã SV
-            var lblMaSV = new Label { Text = "Mã sinh viên:", Location = new Point(20, 55), AutoSize = true };
-            txtMaSV = new TextBox
+            var lblMaSV = new Label { Text = "Mã sinh viên (MSSV):", Location = new Point(20, 55), AutoSize = true };
+            txtMSSV = new TextBox
             {
                 Location = new Point(20, 75),
                 Width = 390,
@@ -44,7 +51,6 @@ namespace CSharp_68PM1_LePhuongNam_0019168
                 Font = new Font("Segoe UI", 10)
             };
 
-            // Họ tên
             var lblHoTen = new Label { Text = "Họ và tên:", Location = new Point(20, 120), AutoSize = true };
             txtHoTen = new TextBox
             {
@@ -54,31 +60,29 @@ namespace CSharp_68PM1_LePhuongNam_0019168
                 Font = new Font("Segoe UI", 10)
             };
 
-            // Ngày sinh
             var lblNgaySinh = new Label { Text = "Ngày sinh:", Location = new Point(20, 185), AutoSize = true };
-            dtpNgaySinh = new DateTimePicker
+            dateNgaySinh = new DateTimePicker
             {
                 Location = new Point(20, 205),
                 Width = 390,
-                Format = DateTimePickerFormat.Short,
+                Format = DateTimePickerFormat.Custom,
+                CustomFormat = "dd/MM/yyyy",
                 Font = new Font("Segoe UI", 10)
             };
 
-            // Giới tính
             var lblGioiTinh = new Label { Text = "Giới tính:", Location = new Point(20, 250), AutoSize = true };
-            cboGioiTinh = new ComboBox
+            cbGioiTinh = new ComboBox
             {
                 Location = new Point(20, 270),
                 Width = 390,
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Font = new Font("Segoe UI", 10)
             };
-            cboGioiTinh.Items.AddRange(new[] { "Nam", "Nữ" });
-            cboGioiTinh.SelectedIndex = 0;
+            cbGioiTinh.Items.AddRange(new[] { "Nam", "Nữ" });
+            cbGioiTinh.SelectedIndex = 0;
 
-            // Lớp
             var lblLop = new Label { Text = "Lớp:", Location = new Point(20, 315), AutoSize = true };
-            cboLop = new ComboBox
+            cbLop = new ComboBox
             {
                 Location = new Point(20, 335),
                 Width = 390,
@@ -86,8 +90,8 @@ namespace CSharp_68PM1_LePhuongNam_0019168
                 Font = new Font("Segoe UI", 10)
             };
 
-            // ===== 4 NÚT CHÍNH =====
-            btnThem = new Button
+            // Buttons
+            btnThemSinhVien = new Button
             {
                 Text = "Thêm",
                 Location = new Point(20, 410),
@@ -99,7 +103,7 @@ namespace CSharp_68PM1_LePhuongNam_0019168
                 Font = new Font("Segoe UI", 11, FontStyle.Bold),
                 Cursor = Cursors.Hand
             };
-            btnThem.FlatAppearance.BorderSize = 0;
+            btnThemSinhVien.FlatAppearance.BorderSize = 0;
 
             btnSua = new Button
             {
@@ -144,28 +148,31 @@ namespace CSharp_68PM1_LePhuongNam_0019168
             btnLamMoi.FlatAppearance.BorderSize = 0;
 
             // Gán sự kiện
-            btnThem.Click += btnThem_Click;
+            btnThemSinhVien.Click += btnThemSinhVien_Click;
             btnSua.Click += btnSua_Click;
             btnXoa.Click += btnXoa_Click;
             btnLamMoi.Click += btnLamMoi_Click;
 
             pnlLeft.Controls.AddRange(new Control[]
             {
-                lblInfo,
-                lblMaSV, txtMaSV,
-                lblHoTen, txtHoTen,
-                lblNgaySinh, dtpNgaySinh,
-                lblGioiTinh, cboGioiTinh,
-                lblLop, cboLop,
-                btnThem, btnSua,
-                btnXoa, btnLamMoi
+                lblInfo, lblMaSV, txtMSSV, lblHoTen, txtHoTen,
+                lblNgaySinh, dateNgaySinh, lblGioiTinh, cbGioiTinh,
+                lblLop, cbLop, btnThemSinhVien, btnSua, btnXoa, btnLamMoi
             });
 
             // ===== PANEL PHẢI =====
-            var pnlRight = new Panel { Dock = DockStyle.Fill, Padding = new Padding(15) };
+            var pnlRight = new Panel
+            {
+                Dock = DockStyle.Fill,
+                Padding = new Padding(15)
+            };
 
-            // Thanh tìm kiếm
-            var pnlSearch = new Panel { Height = 65, Dock = DockStyle.Top };
+            var pnlSearch = new Panel
+            {
+                Height = 65,
+                Dock = DockStyle.Top
+            };
+
             var lblTimKiem = new Label
             {
                 Text = "Tìm kiếm (Tên / Mã SV / Lớp):",
@@ -173,6 +180,7 @@ namespace CSharp_68PM1_LePhuongNam_0019168
                 AutoSize = true,
                 Font = new Font("Segoe UI", 10)
             };
+
             txtTimKiem = new TextBox
             {
                 Location = new Point(0, 30),
@@ -180,6 +188,7 @@ namespace CSharp_68PM1_LePhuongNam_0019168
                 Height = 32,
                 Font = new Font("Segoe UI", 10)
             };
+
             btnTim = new Button
             {
                 Text = "Tìm",
@@ -194,10 +203,11 @@ namespace CSharp_68PM1_LePhuongNam_0019168
             };
             btnTim.FlatAppearance.BorderSize = 0;
             btnTim.Click += btnTim_Click;
+
             pnlSearch.Controls.AddRange(new Control[] { lblTimKiem, txtTimKiem, btnTim });
 
             // DataGridView
-            dgvSinhVien = new DataGridView
+            DsSinhVien = new DataGridView
             {
                 Dock = DockStyle.Fill,
                 ReadOnly = true,
@@ -211,10 +221,10 @@ namespace CSharp_68PM1_LePhuongNam_0019168
                 ColumnHeadersHeight = 40,
                 RowTemplate = { Height = 35 }
             };
-            dgvSinhVien.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            dgvSinhVien.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(207, 226, 255);
-            dgvSinhVien.EnableHeadersVisualStyles = false;
-            dgvSinhVien.CellClick += dgvSinhVien_CellClick;
+            DsSinhVien.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            DsSinhVien.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(207, 226, 255);
+            DsSinhVien.EnableHeadersVisualStyles = false;
+            DsSinhVien.CellClick += DsSinhVien_CellClick;
 
             // Phân trang
             var pnlPage = new Panel { Height = 55, Dock = DockStyle.Bottom };
@@ -237,26 +247,26 @@ namespace CSharp_68PM1_LePhuongNam_0019168
 
             pnlPage.Controls.AddRange(new Control[] { btnDau, btnTruoc, lblTrang, btnSau, btnCuoi });
 
-            pnlRight.Controls.Add(dgvSinhVien);
+            pnlRight.Controls.Add(DsSinhVien);
             pnlRight.Controls.Add(pnlPage);
             pnlRight.Controls.Add(pnlSearch);
 
-            // ===== FORM =====
-            Controls.Add(pnlRight);
-            Controls.Add(pnlLeft);
-            AutoScaleDimensions = new SizeF(8F, 20F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1100, 650);
-            Name = "FormSinhVien";
-            Text = "Quản lý Sinh Viên";
-            BackColor = Color.White;
+            // ===== USERCONTROL =====
+            this.Controls.Add(pnlRight);
+            this.Controls.Add(pnlLeft);
+            this.AutoScaleDimensions = new SizeF(8F, 20F);
+            this.AutoScaleMode = AutoScaleMode.Font;
+            this.Size = new Size(1100, 650);
+            this.Name = "UCQuanLySinhVien";
+            this.BackColor = Color.White;
         }
 
-        private TextBox txtMaSV, txtHoTen, txtTimKiem;
-        private ComboBox cboGioiTinh, cboLop;
-        private DateTimePicker dtpNgaySinh;
-        private DataGridView dgvSinhVien;
-        private Button btnThem, btnSua, btnXoa, btnLamMoi, btnTim;
+        // Khai báo controls
+        private TextBox txtMSSV, txtHoTen, txtTimKiem;
+        private ComboBox cbGioiTinh, cbLop;
+        private DateTimePicker dateNgaySinh;
+        private DataGridView DsSinhVien;
+        private Button btnThemSinhVien, btnSua, btnXoa, btnLamMoi, btnTim;
         private Button btnDau, btnTruoc, btnSau, btnCuoi;
         private Label lblTrang;
     }

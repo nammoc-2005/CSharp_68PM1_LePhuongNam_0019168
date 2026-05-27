@@ -1,3 +1,6 @@
+using System;
+using System.Windows.Forms;
+using System.Drawing;
 namespace CSharp_68PM1_LePhuongNam_0019168
 {
     partial class MainForm
