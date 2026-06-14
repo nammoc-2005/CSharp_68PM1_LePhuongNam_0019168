@@ -151,26 +151,38 @@ namespace BaiTapLonC_Winform
 
         private void btnSua_Click(object sender, EventArgs e)
         {
-            if (!int.TryParse(txtMSSV.Text, out int maSV)) return;
+            if (!int.TryParse(txtMaSV.Text, out int maSV))
+            {
+                MessageBox.Show("Vui lòng chọn sinh viên cần sửa!", "Nhắc nhở",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             try
             {
                 var sv = db.tbl_sinhviens.FirstOrDefault(s => s.id == maSV);
-                if (sv == null) return;
+                if (sv == null)
+                {
+                    MessageBox.Show("Không tìm thấy sinh viên!", "Lỗi",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
                 sv.hoten = txtHoTen.Text.Trim();
-                sv.gioitinh = cbGioiTinh.Text;
-                sv.ngaysinh = dateNgaySinh.Value;
-                sv.malop = cbLop.SelectedValue?.ToString();
+                sv.gioitinh = cboGioiTinh.Text;
+                sv.ngaysinh = dtpNgaySinh.Value;
+                sv.malop = cboLop.SelectedValue?.ToString();
 
                 db.SubmitChanges();
-                MessageBox.Show("Sửa thành công!", "Thông báo");
+                MessageBox.Show("Sửa sinh viên thành công!", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadDanhSach();
                 ClearForm();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi khi sửa: " + ex.Message);
+                MessageBox.Show("Lỗi khi sửa: " + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
