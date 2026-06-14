@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace CSharp_68PM1_LePhuongNam_0019168
@@ -179,6 +180,53 @@ namespace CSharp_68PM1_LePhuongNam_0019168
         {
             currentPage = Math.Max(1, (int)Math.Ceiling((double)danhSachHienThi.Count / pageSize));
             LoadDanhSach(txtTimKiem.Text);
+        }
+
+        private void btnXemSinhVien_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtMaLop.Text))
+            { MessageBox.Show("Vui lòng chọn lớp!", "Nhắc nhở", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
+
+            try
+            {
+                var svList = db.tbl_sinhviens
+                    .Where(sv => sv.malop == txtMaLop.Text)
+                    .Select(sv => new {
+                        sv.id,
+                        sv.hoten,
+                        sv.gioitinh,
+                        NgaySinh = sv.ngaysinh
+                    }).ToList();
+
+                var frmXem = new Form
+                {
+                    Text = $"Danh sách sinh viên lớp {txtMaLop.Text} ({svList.Count} sinh viên)",
+                    Size = new Size(700, 450),
+                    StartPosition = FormStartPosition.CenterParent
+                };
+
+                var dgv = new DataGridView
+                {
+                    Dock = DockStyle.Fill,
+                    ReadOnly = true,
+                    AllowUserToAddRows = false,
+                    AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                    BackgroundColor = Color.White,
+                    RowHeadersVisible = false,
+                    DataSource = svList
+                };
+
+                frmXem.Controls.Add(dgv);
+
+                if (svList.Count == 0)
+                    MessageBox.Show($"Lớp {txtMaLop.Text} chưa có sinh viên.", "Thông báo");
+                else
+                    frmXem.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message);
+            }
         }
     }
 }

@@ -67,6 +67,7 @@ namespace CSharp_68PM1_LePhuongNam_0019168
             btnTim = new Button { Text = "Tìm", Location = new Point(390, 28), Width = 90, Height = 36, BackColor = Color.FromArgb(55, 71, 79), ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI", 10, FontStyle.Bold), Cursor = Cursors.Hand };
             btnTim.FlatAppearance.BorderSize = 0;
             btnTim.Click += btnTim_Click;
+            btnXemSinhVien.Click += btnXemSinhVien_Click;
             pnlSearch.Controls.AddRange(new Control[] { lblTimKiem, txtTimKiem, btnTim });
 
             dgvLopHoc = new DataGridView
