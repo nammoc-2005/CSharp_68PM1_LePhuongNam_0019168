@@ -1,3 +1,4 @@
+using CSharp_68PM1_LePhuongNam_0019168;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -202,24 +203,24 @@ namespace BaiTapLonC_Winform
             ClearForm();
         }
 
-        private void DsSinhVien_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void dgvSinhVien_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
 
-            var row = DsSinhVien.Rows[e.RowIndex];
-            txtMSSV.Text = row.Cells["id"].Value?.ToString();
+            var row = dgvSinhVien.Rows[e.RowIndex];
+            txtMaSV.Text = row.Cells["id"].Value?.ToString();
             txtHoTen.Text = row.Cells["hoten"].Value?.ToString();
-            cbGioiTinh.Text = row.Cells["gioitinh"].Value?.ToString();
+            cboGioiTinh.Text = row.Cells["gioitinh"].Value?.ToString();
 
             if (DateTime.TryParse(row.Cells["ngaysinh"].Value?.ToString(), out DateTime dt))
-                dateNgaySinh.Value = dt;
+                dtpNgaySinh.Value = dt;
 
             string malop = row.Cells["malop"].Value?.ToString() ?? "";
-            for (int i = 0; i < cbLop.Items.Count; i++)
+            for (int i = 0; i < cboLop.Items.Count; i++)
             {
-                if (cbLop.Items[i] is tbl_lophoc lop && lop.malop == malop)
+                if (cboLop.Items[i] is tbl_lophoc lop && lop.malop == malop)
                 {
-                    cbLop.SelectedIndex = i;
+                    cboLop.SelectedIndex = i;
                     break;
                 }
             }

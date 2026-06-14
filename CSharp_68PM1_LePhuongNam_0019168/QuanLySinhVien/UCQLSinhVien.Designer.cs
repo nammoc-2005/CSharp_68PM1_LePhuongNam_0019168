@@ -224,7 +224,7 @@ namespace CSharp_68PM1_LePhuongNam_0019168
             DsSinhVien.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
             DsSinhVien.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(207, 226, 255);
             DsSinhVien.EnableHeadersVisualStyles = false;
-            DsSinhVien.CellClick += DsSinhVien_CellClick;
+            dgvSinhVien.CellClick += dgvSinhVien_CellClick;
 
             // Phân trang
             var pnlPage = new Panel { Height = 55, Dock = DockStyle.Bottom };
