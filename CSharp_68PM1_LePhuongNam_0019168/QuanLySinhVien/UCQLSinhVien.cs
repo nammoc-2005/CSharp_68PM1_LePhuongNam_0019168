@@ -63,40 +63,71 @@ namespace BaiTapLonC_Winform
 
         private void LoadDanhSach(string tuKhoa = "")
         {
-            var query = from sv in db.tbl_sinhviens
-                        join lop in db.tbl_lophocs on sv.malop equals lop.malop into lj
-                        from lop in lj.DefaultIfEmpty()
-                        where string.IsNullOrEmpty(tuKhoa) ||
-                              (sv.hoten != null && sv.hoten.Contains(tuKhoa)) ||
-                              sv.id.ToString().Contains(tuKhoa) ||
-                              (sv.malop != null && sv.malop.Contains(tuKhoa))
-                        select new
-                        {
-                            sv.id,
-                            sv.hoten,
-                            sv.gioitinh,
-                            sv.ngaysinh,
-                            sv.malop,
-                            TenLop = lop != null ? lop.tenlop : ""
-                        };
+            try
+            {
+                var query = from sv in db.tbl_sinhviens
+                            join lop in db.tbl_lophocs on sv.malop equals lop.malop into lj
+                            from lop in lj.DefaultIfEmpty()
+                            where string.IsNullOrEmpty(tuKhoa) ||
+                                  (sv.hoten != null && sv.hoten.Contains(tuKhoa)) ||
+                                  sv.id.ToString().Contains(tuKhoa) ||
+                                  (sv.malop != null && sv.malop.Contains(tuKhoa))
+                            select new
+                            {
+                                sv.id,
+                                sv.hoten,
+                                sv.gioitinh,
+                                sv.ngaysinh,
+                                sv.malop,
+                                TenLop = lop != null ? lop.tenlop : ""
+                            };
 
-            danhSachHienThi = query.ToList();
+                danhSachHienThi = query.Cast<dynamic>().ToList();
 
-            int total = danhSachHienThi.Count;
-            int totalPages = Math.Max(1, (int)Math.Ceiling((double)total / pageSize));
-            if (currentPage > totalPages) currentPage = totalPages;
+                int total = danhSachHienThi.Count;
+                int totalPages = Math.Max(1, (int)Math.Ceiling((double)total / pageSize));
+                if (currentPage > totalPages) currentPage = totalPages;
 
-            DsSinhVien.DataSource = danhSachHienThi
-                .Skip((currentPage - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
+                dgvSinhVien.DataSource = danhSachHienThi
+                    .Skip((currentPage - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
 
-            lblTrang.Text = $"Trang {currentPage}/{totalPages}  |  {total} bản ghi";
+                lblTrang.Text = $"Trang {currentPage}/{totalPages}  |  {total} bản ghi";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi tải dữ liệu: " + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnTim_Click(object sender, EventArgs e)
         {
             currentPage = 1;
+            LoadDanhSach(txtTimKiem.Text.Trim());
+        }
+
+        private void btnDau_Click(object sender, EventArgs e)
+        {
+            currentPage = 1;
+            LoadDanhSach(txtTimKiem.Text.Trim());
+        }
+
+        private void btnTruoc_Click(object sender, EventArgs e)
+        {
+            if (currentPage > 1) { currentPage--; LoadDanhSach(txtTimKiem.Text.Trim()); }
+        }
+
+        private void btnSau_Click(object sender, EventArgs e)
+        {
+            int totalPages = Math.Max(1, (int)Math.Ceiling((double)danhSachHienThi.Count / pageSize));
+            if (currentPage < totalPages) { currentPage++; LoadDanhSach(txtTimKiem.Text.Trim()); }
+        }
+
+        private void btnCuoi_Click(object sender, EventArgs e)
+        {
+            currentPage = Math.Max(1, (int)Math.Ceiling((double)danhSachHienThi.Count / pageSize));
             LoadDanhSach(txtTimKiem.Text.Trim());
         }
 
@@ -260,15 +291,6 @@ namespace BaiTapLonC_Winform
             if (cbLop.Items.Count > 0) cbLop.SelectedIndex = 0;
         }
 
-        // Phân trang
-        private void btnDau_Click(object sender, EventArgs e) { currentPage = 1; LoadDanhSach(txtTimKiem.Text.Trim()); }
-        private void btnTruoc_Click(object sender, EventArgs e) { if (currentPage > 1) { currentPage--; LoadDanhSach(txtTimKiem.Text.Trim()); } }
-        private void btnSau_Click(object sender, EventArgs e) { currentPage++; LoadDanhSach(txtTimKiem.Text.Trim()); }
-        private void btnCuoi_Click(object sender, EventArgs e)
-        {
-            int totalPages = (int)Math.Ceiling((double)danhSachHienThi.Count / pageSize);
-            currentPage = Math.Max(1, totalPages);
-            LoadDanhSach(txtTimKiem.Text.Trim());
-        }
+        
     }
 }
